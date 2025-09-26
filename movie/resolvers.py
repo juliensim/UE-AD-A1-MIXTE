@@ -6,7 +6,7 @@ def movie_with_id(_,info,_id):
         for movie in movies['movies']:
             if movie['id'] == _id:
                 return movie
-            
+
 def update_movie_rate(_,info,_id,_rate):
     newmovies = {}
     newmovie = {}
@@ -26,3 +26,7 @@ def resolve_actors_in_movie(movie, info):
         actors = json.load(file)
         result = [actor for actor in actors['actors'] if movie['id'] in actor['films']]
         return result
+
+def all_movies(_,info):
+    with open('{}/data/movies.json'.format("."), "r") as file:
+        return json.load(file)["movies"]
