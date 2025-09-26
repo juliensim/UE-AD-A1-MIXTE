@@ -26,3 +26,7 @@ def resolve_actors_in_movie(movie, info):
         actors = json.load(file)
         result = [actor for actor in actors['actors'] if movie['id'] in actor['films']]
         return result
+
+def all_movies(_,info):
+    with open('{}/data/movies.json'.format("."), "r") as file:
+        return json.load(file)["movies"]
