@@ -3,17 +3,25 @@ from flask import Flask, request, jsonify, make_response
 
 import resolvers as r
 
-PORT = 3001
+PORT = 3002
 HOST = '0.0.0.0'
 app = Flask(__name__)
 
 # todo create elements for Ariadne
-type_defs = load_schema_from_path("booking.graphql")
+type_defs = load_schema_from_path('booking.graphql')
 query = QueryType()
+booking = ObjectType('Booking')
+bookingDetails = ObjectType('BookingDetails')
+bookings = ObjectType('[Booking]')
+query.set_field('booking_by_userid', r.booking_by_userid)
+query.set_field('all_bookings', r.all_bookings)
+query.set_field('booking_details', r.booking_details)
+
 mutation = MutationType()
-booking = ObjectType("Booking")
-query.set_field('booking_with_id', r.booking_with_id)
-schema = make_executable_schema(type_defs, query, mutation, booking)
+mutation.set_field('add_booking', r.add_booking)
+mutation.set_field('delete_booking', r.delete_booking)
+
+schema = make_executable_schema(type_defs, booking, query, mutation)
 
 # root message
 @app.route("/", methods=['GET'])
