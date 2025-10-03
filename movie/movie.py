@@ -14,9 +14,12 @@ movie = ObjectType('Movie')
 movies = ObjectType('[Movie]')
 query.set_field('movie_with_id', r.movie_with_id)
 query.set_field('all_movies', r.all_movies)
+query.set_field('movie_by_title', r.movie_by_title)
 
 mutation = MutationType()
 mutation.set_field('update_movie_rate', r.update_movie_rate)
+mutation.set_field('add_movie', r.add_movie)
+mutation.set_field('delete_movie', r.delete_movie)
 
 actor = ObjectType('Actor')
 movie.set_field('actors', r.resolve_actors_in_movie)
