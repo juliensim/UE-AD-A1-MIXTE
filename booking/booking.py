@@ -10,10 +10,10 @@ app = Flask(__name__)
 # todo create elements for Ariadne
 type_defs = load_schema_from_path("booking.graphql")
 query = QueryType()
-mutation = MutationType()
+query.set_field('bookings_by_id', r.bookings_by_id)
+query.set_field('all_bookings', r.all_bookings)
 booking = ObjectType("Booking")
-query.set_field('booking_with_id', r.booking_with_id)
-schema = make_executable_schema(type_defs, query, mutation, booking)
+schema = make_executable_schema(type_defs, booking, query)
 
 # root message
 @app.route("/", methods=['GET'])

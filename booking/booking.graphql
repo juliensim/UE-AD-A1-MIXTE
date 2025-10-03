@@ -1,0 +1,14 @@
+type Query {
+    bookings_by_id(_id: String!): [Booking]
+    all_bookings: [Booking]
+}
+
+type Booking {
+    userid: String!
+    dates: [BookingDate]!
+}
+
+type BookingDate {
+    date: String!
+    movies: [String!]!
+}
