@@ -1,14 +1,51 @@
 type Query {
-    bookings_by_id(_id: String!): [Booking]
+    booking_by_userid(_userid: String!): Booking
     all_bookings: [Booking]
+    booking_details(_userid: String!): BookingDetails
+}
+
+type Mutation {
+    add_booking(_userid: String!, _new_booking: IBooking): Booking
+    delete_booking(_userid: String!): String!
 }
 
 type Booking {
     userid: String!
-    dates: [BookingDate]!
+    dates: [Date]
 }
 
-type BookingDate {
+type Date {
     date: String!
-    movies: [String!]!
+    movies: [String!]
+}
+
+type BookingDetails {
+    userid: String!
+    movies: [Movie!]
+}
+
+type Movie {
+    id: String!
+    title: String!
+    director: String!
+    rating: Float!
+    actors: [Actor]
+}
+
+type Actor {
+    id: String!
+    firstname: String!
+    lastname: String!
+    birthyear: Int!
+    films: [String!]
+}
+
+input IBooking {
+    new_userid: String!
+    new_dates: [IDate]
+}
+
+input IDate {
+    new_date: String!
+    new_movies: [String!]
 }
