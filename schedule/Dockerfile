@@ -1,19 +1,15 @@
-FROM python
-# can you find a lighter image?
+FROM python:3.10-alpine
 
 WORKDIR /app
 
 # copy the requirements file in the workdir
-RUN
+COPY requirements.txt /app
 
 # install the Python requirements
-RUN
-
-# grpc compilation of proto files or copy of generated files
-RUN
+RUN pip install -r requirements.txt
 
 # copy the app files and directories
-RUN
+COPY .. /app/
 
-# start movie.py when the container is started
-CMD 
+# start schedule.py when the container is started
+CMD ["python","-u","schedule.py"]
