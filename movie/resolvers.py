@@ -1,6 +1,19 @@
-import json
+import json, requests
+import os
+from dotenv import load_dotenv
+from graphql import GraphQLError
+
+load_dotenv()
+
+def check_permission(permission_required,info):
+    return requests.get(os.getenv("USER_" + os.getenv("MODE")) + "check/" + permission_required,headers={'X-Token':info.context.headers.get("X-Token")}).status_code == 200
 
 def movie_with_id(_,info,_id):
+    if not(check_permission("user",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     with open('{}/data/movies.json'.format("."), "r") as file:
         movies = json.load(file)
         for movie in movies['movies']:
@@ -8,6 +21,11 @@ def movie_with_id(_,info,_id):
                 return movie
             
 def movie_by_title(_,info,_title):
+    if not(check_permission("user",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     with open('{}/data/movies.json'.format("."), "r") as file:
         movies = json.load(file)["movies"]
         for movie in movies:
@@ -15,6 +33,11 @@ def movie_by_title(_,info,_title):
                 return movie
             
 def add_movie(_,info,_id,_title,_rate,_director):
+    if not(check_permission("admin",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     newmovie = {
             "id": _id,
             "title": _title,
@@ -34,6 +57,11 @@ def add_movie(_,info,_id,_title,_rate,_director):
         
 
 def update_movie_rate(_,info,_id,_rate):
+    if not(check_permission("admin",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     newmovies = {}
     newmovie = {}
     with open('{}/data/movies.json'.format("."), "r") as rfile:
@@ -48,6 +76,11 @@ def update_movie_rate(_,info,_id,_rate):
     return newmovie
 
 def delete_movie(_,info,_id):
+    if not(check_permission("admin",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     newmovies = {}
     delmovie = {}
     with open('{}/data/movies.json'.format("."), "r") as rfile:
@@ -71,5 +104,10 @@ def resolve_actors_in_movie(movie, info):
         return result
 
 def all_movies(_,info):
+    if not(check_permission("user",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     with open('{}/data/movies.json'.format("."), "r") as file:
         return json.load(file)["movies"]
