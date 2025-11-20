@@ -7,6 +7,8 @@ PORT = 3001
 HOST = '0.0.0.0'
 app = Flask(__name__)
 
+
+
 # todo create elements for Ariadne
 type_defs = load_schema_from_path('movie.graphql')
 query = QueryType()
