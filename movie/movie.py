@@ -2,6 +2,11 @@ from ariadne import graphql_sync, make_executable_schema, load_schema_from_path,
 from flask import Flask, request, jsonify, make_response
 
 import resolvers as r
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PORT = 3001
 HOST = '0.0.0.0'
@@ -28,6 +33,12 @@ movie.set_field('actors', r.resolve_actors_in_movie)
 
 schema = make_executable_schema(type_defs, movie, query, mutation, actor)
 
+@app.before_request
+def authentification():
+    if requests.get(os.getenv("USER_" + os.getenv("MODE")) + "auth",headers={'X-Token':request.headers.get("X-Token")}).status_code != 200:
+        return make_response(jsonify({"error": "Unknown user"}), 401)
+    return
+
 # root message
 @app.route("/", methods=['GET'])
 def home():
@@ -40,7 +51,7 @@ def graphql_server():
     success, result = graphql_sync(
                         schema,
                         data,
-                        context_value=None,
+                        context_value=request,
                         debug=app.debug
                     )
     status_code = 200 if success else 400

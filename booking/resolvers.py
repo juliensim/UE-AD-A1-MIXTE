@@ -1,6 +1,19 @@
 import json, requests
+import os
+from dotenv import load_dotenv
+from graphql import GraphQLError
+
+load_dotenv()
+
+def check_permission(permission_required,info):
+    return requests.get(os.getenv("USER_" + os.getenv("MODE")) + "check/" + permission_required,headers={'X-Token':info.context.headers.get("X-Token")}).status_code == 200
 
 def booking_by_userid(_,info,_userid):
+    if not(check_permission("user",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     with open('{}/data/bookings.json'.format("."), "r") as file:
         bookings = json.load(file)
         for booking in bookings['bookings']:
@@ -8,6 +21,11 @@ def booking_by_userid(_,info,_userid):
                 return booking
 
 def add_booking(_,info,_userid,_new_booking):
+    if not(check_permission("admin",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     newbooking = {}
     newbookings = {}
     with open('{}/data/bookings.json'.format("."), "r") as rfile:
@@ -24,6 +42,11 @@ def add_booking(_,info,_userid,_new_booking):
     return newbooking
 
 def delete_booking(_,info,_userid):
+    if not(check_permission("admin",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     newbookings = {"bookings":[]}
     with open('{}/data/bookings.json'.format("."), "r") as rfile:
         bookings = json.load(rfile)
@@ -35,10 +58,20 @@ def delete_booking(_,info,_userid):
     return _userid
 
 def all_bookings(_,info):
+    if not(check_permission("admin",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     with open('{}/data/bookings.json'.format("."), "r") as file:
         return json.load(file)["bookings"]
     
 def booking_details(_,info,_userid):
+    if not(check_permission("user",info)):
+        raise GraphQLError(
+            "Insufficient permissions",
+            extensions={"code": "UNAUTHORIZED"}
+        )
     with open('{}/data/bookings.json'.format("."), "r") as file:
         bookings = json.load(file)
         full_res = []
@@ -52,5 +85,5 @@ def booking_details(_,info,_userid):
                         movie = requests.post("http://localhost:3001/graphql",json={'query': '{movie_with_id(_id:"96798c08-d19b-4986-a05d-7da856efb697") {title director rating actors{firstname lastname birthyear	films}}}'}).json()
                         pre_res["movies"].append(movie["data"]["movie_with_id"])
                 full_res.append(pre_res)
-        return pre_res
+        return full_res
             

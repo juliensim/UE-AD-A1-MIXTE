@@ -2,6 +2,11 @@ from ariadne import graphql_sync, make_executable_schema, load_schema_from_path,
 from flask import Flask, request, jsonify, make_response
 
 import resolvers as r
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PORT = 3002
 HOST = '0.0.0.0'
@@ -22,6 +27,12 @@ mutation.set_field('add_booking', r.add_booking)
 mutation.set_field('delete_booking', r.delete_booking)
 
 schema = make_executable_schema(type_defs, booking, query, mutation)
+
+@app.before_request
+def authentification():
+    if requests.get(os.getenv("USER_" + os.getenv("MODE")) + "auth",headers={'X-Token':request.headers.get("X-Token")}).status_code != 200:
+        return make_response(jsonify({"error": "Unknown user"}), 401)
+    return
 
 # root message
 @app.route("/", methods=['GET'])
