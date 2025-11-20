@@ -62,8 +62,6 @@ def add_movie(_,info,_id,_title,_rate,_director):
     movies.insert_one(newmovie)
     return newmovie
 
-
-
 def update_movie_rate(_,info,_id,_rate):
     if not(check_permission("admin",info)):
         raise GraphQLError(
@@ -79,6 +77,7 @@ def update_movie_rate(_,info,_id,_rate):
     else:
         updated_movie = movies.find_one({"id": _id}, {"_id": 0})
         return updated_movie
+    
 def delete_movie(_,info,_id):
     if not(check_permission("admin",info)):
         raise GraphQLError(
@@ -91,7 +90,6 @@ def delete_movie(_,info,_id):
         return None
     else:
         return deleted_movie
-
 
 def resolve_actors_in_movie(movie, info):
     with open('{}/data/actors.json'.format("."), "r") as file:
