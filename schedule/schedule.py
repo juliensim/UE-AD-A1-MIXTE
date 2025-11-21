@@ -6,14 +6,22 @@ import json
 import requests
 import os
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
 load_dotenv()
 
 class ScheduleServicer(schedule_pb2_grpc.ScheduleServicer):
 
     def __init__(self):
+        client = MongoClient(os.getenv("MONGO_" + os.getenv("MODE")))
+        db = client["schedules"]
+        self.schedules = db["schedules"]
         with open('{}/data/times.json'.format("."), "r") as jsf:
-            self.db = json.load(jsf)["schedule"]
+            self.schedules_json = json.load(jsf)["schedule"]
+        
+        if list(self.schedules.find()) == [] :
+            self.schedules.insert_many(self.schedules_json)
+
 
     def authentification(self,context):
         return requests.get(os.getenv("USER_" + os.getenv("MODE")) + "auth",headers={'X-Token':dict(context.invocation_metadata()).get("x-token")}).status_code == 200
@@ -33,10 +41,17 @@ class ScheduleServicer(schedule_pb2_grpc.ScheduleServicer):
                 "Insufficient permissions"
             )
         moviesid = []
-        for date in self.db:
-            if date['date'] == request.date:
-                for movieid in date["movies"]:
-                    moviesid.append(schedule_pb2.MovieID(id=movieid))
+
+        schedule_docs = list(
+            self.schedules.find(
+                {"date": request.date},
+                {"movies": 1, "_id": 0}
+            )
+        )
+        for doc in schedule_docs:
+            for movie_id in doc.get("movies", []):
+                moviesid.append(schedule_pb2.MovieID(id=movie_id))
+
         return schedule_pb2.MoviesID(moviesid=moviesid)
     
     def GetDatesForMovie(self, request, context):
@@ -51,10 +66,12 @@ class ScheduleServicer(schedule_pb2_grpc.ScheduleServicer):
                 "Insufficient permissions"
             )
         dates = []
-        for date in self.db:
-            for movie in date["movies"]:
-                if movie == request.id:
-                    dates.append(schedule_pb2.Date(date=date["date"]))
+        schedule_docs = self.schedules.find(
+            {"movies": request.id},
+            {"date": 1, "_id": 0}
+        )
+        for doc in schedule_docs:
+            dates.append(schedule_pb2.Date(date=doc["date"]))
         return schedule_pb2.Dates(dates=dates)
     
     def AddSchedule(self, request, context):
@@ -68,12 +85,15 @@ class ScheduleServicer(schedule_pb2_grpc.ScheduleServicer):
                 grpc.StatusCode.PERMISSION_DENIED,
                 "Insufficient permissions"
             )
-        for date in self.db:
-            if date["date"] == request.date:
-                for newmovie in request.movies:
-                    date["movies"].append(newmovie)
-                    return request
-        self.db.append({"date":request.date, "movies":request.movies})
+        result = self.schedules.update_one(
+            {"date": request.date},
+            {"$addToSet": {"movies": {"$each": list(request.movies)}}}
+        )
+        if result.matched_count == 0:
+            self.schedules.insert_one({
+                "date": request.date,
+                "movies": list(request.movies)
+            })
         return request
     
     def DeleteSchedule(self, request, context):
@@ -87,14 +107,13 @@ class ScheduleServicer(schedule_pb2_grpc.ScheduleServicer):
                 grpc.StatusCode.PERMISSION_DENIED,
                 "Insufficient permissions"
             )
-        for date in self.db:
-            if date["date"] == request.date:
-                for movie in date["movies"]:
-                    for deleting_movie in request.movies:
-                        if movie == deleting_movie:
-                            date["movies"].remove(movie)
-                            if len(date["movies"]) == 0:
-                                self.db.remove(date)
+        self.schedules.update_one(
+            {"date": request.date},
+            {"$pull": {"movies": {"$in": list(request.movies)}}}
+        )
+        self.schedules.delete_many(
+            {"date": request.date, "movies": {"$size": 0}}
+        )
         return request
 
 def serve():

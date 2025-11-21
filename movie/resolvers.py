@@ -11,20 +11,33 @@ load_dotenv()
 def check_permission(permission_required,info):
     return requests.get(os.getenv("USER_" + os.getenv("MODE")) + "check/" + permission_required,headers={'X-Token':info.context.headers.get("X-Token")}).status_code == 200
 
+movies = None
+actors = None
+
 def Initialisation():
+    global movies, actors
+
     with open('{}/data/movies.json'.format("."), "r") as jsf:
         movies_json = json.load(jsf).get("movies", [])
 
-    #client = MongoClient("mongodb://username:password@127.0.0.1:3000/") #version locale
-    client = MongoClient("mongodb://username:password@mongo:27017/") 
-    db = client["movies"]
-    collection = db["movies"]
+    client = MongoClient(os.getenv("MONGO_" + os.getenv("MODE")))
+    db_movie = client["movies"]
+    collection_movie = db_movie["movies"]
     
-    if list(collection.find()) == [] :
-        collection.insert_many(movies_json)
-    return collection
+    if list(collection_movie.find()) == [] :
+        collection_movie.insert_many(movies_json)
+    movies = collection_movie
 
-movies = Initialisation()
+    with open('{}/data/actors.json'.format("."), "r") as jsf:
+        actors_json = json.load(jsf).get("actors", [])
+    db_movie = client["actors"]
+    collection_movie = db_movie["actors"]
+    
+    if list(collection_movie.find()) == [] :
+        collection_movie.insert_many(actors_json)
+    actors = collection_movie
+
+Initialisation()
 
 def movie_with_id(_,info,_id):
     if not(check_permission("user",info)):
@@ -32,7 +45,7 @@ def movie_with_id(_,info,_id):
             "Insufficient permissions",
             extensions={"code": "UNAUTHORIZED"}
         )
-    movie = movies.find_one({"id": _id},{"_id":0,"access_token":0})
+    movie = movies.find_one({"id": _id},{"_id":0})
     return movie
             
 def movie_by_title(_,info,_title):
@@ -41,7 +54,7 @@ def movie_by_title(_,info,_title):
             "Insufficient permissions",
             extensions={"code": "UNAUTHORIZED"}
         )
-    movie = movies.find_one({"title": _title},{"_id":0,"access_token":0})
+    movie = movies.find_one({"title": _title},{"_id":0})
     return movie
             
 def add_movie(_,info,_id,_title,_rate,_director):
@@ -56,7 +69,7 @@ def add_movie(_,info,_id,_title,_rate,_director):
             "rating": _rate,
             "director": _director
     }
-    existing_movie = movies.find_one({"id": _id},{"_id":0,"access_token":0})
+    existing_movie = movies.find_one({"id": _id},{"_id":0})
     if existing_movie:
         return None
     movies.insert_one(newmovie)
@@ -92,10 +105,8 @@ def delete_movie(_,info,_id):
         return deleted_movie
 
 def resolve_actors_in_movie(movie, info):
-    with open('{}/data/actors.json'.format("."), "r") as file:
-        actors = json.load(file)
-        result = [actor for actor in actors['actors'] if movie['id'] in actor['films']]
-        return result
+    result = list(actors.find({"films": movie["id"]}, {"_id": 0}))
+    return result
 
 def all_movies(_,info):
     if not(check_permission("user",info)):
