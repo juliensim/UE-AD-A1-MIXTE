@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from graphql import GraphQLError
 from pymongo import MongoClient
 from flask import Flask, request
+import schedule_pb2_grpc,schedule_pb2
+import grpc
 
 load_dotenv()
 
@@ -46,6 +48,38 @@ def add_booking(_,info,_userid,_new_booking):
             "Insufficient permissions",
             extensions={"code": "UNAUTHORIZED"}
         )
+          
+    booking = bookings.find_one({"userid": _new_booking["new_userid"]})
+    if booking:
+            raise GraphQLError(
+            "booking ID already exists"
+            )
+    
+    channel = grpc.insecure_channel(os.getenv("SCHEDULE_" + os.getenv("MODE")))
+    stub = schedule_pb2_grpc.ScheduleStub(channel)
+    metadata = [('x-token',info.context.headers.get("X-Token"))]
+
+    for date in _new_booking["new_dates"]:
+
+        schedule = stub.GetMoviesByDate(
+            schedule_pb2.Date(date=date["new_date"]),
+            metadata=metadata
+        )
+        if not schedule.moviesid:
+            raise GraphQLError(
+                "No movies scheduled for the date"
+            )
+        for movie in date["new_movies"]:
+            present = False
+            for schedule_movie in schedule.moviesid:
+                if schedule_movie.id == movie:
+                    present = True
+            if not(present):
+                raise GraphQLError(
+                    "One of the movies is not scheduled for the date"
+                )
+    channel.close()
+
     newbooking = {
         "userid": _new_booking["new_userid"],
         "dates": [
@@ -94,7 +128,7 @@ def call_movie_service(movie_id, token):
         "operationName": "MovieQuery"
     }
     resp = requests.post(
-        "http://localhost:3001/graphql",
+        os.getenv("MOVIE_" + os.getenv("MODE")),
         json=payload,
         headers={
             "Content-Type": "application/json",

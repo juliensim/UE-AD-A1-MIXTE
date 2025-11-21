@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+service Schedule {
+    rpc GetMoviesByDate(Date) returns (MoviesID) {}
+    rpc GetDatesForMovie(MovieID) returns (Dates) {}
+    rpc AddSchedule(ScheduleData) returns (ScheduleData) {}
+    rpc DeleteSchedule(ScheduleData) returns (ScheduleData) {}
+}
+message Date {
+    string date = 1;
+}
+message MoviesID {
+    repeated MovieID moviesid = 1;
+}
+message MovieID {
+    string id = 1;
+}
+message Dates {
+    repeated Date dates = 1;
+}
+message ScheduleData {
+    string date = 1;
+    repeated MovieID movies = 2;
+}
+message Empty {
+}
