@@ -1,0 +1,754 @@
+type: collection.insomnia.rest/5.0
+name: Scratch Pad
+meta:
+  id: wrk_af64c78c992f4a399bce376906562c11
+  created: 1759493441825
+  modified: 1759493441825
+  description: ""
+collection:
+  - name: Movie
+    meta:
+      id: fld_54a66b3ead9a4953a61c1d3fd2f679f9
+      created: 1758289147414
+      modified: 1758292691834
+      sortKey: -1758289147414
+      description: ""
+  - name: User
+    meta:
+      id: fld_e7ac5be0e620482c9de4f31a93ee3003
+      created: 1758291534520
+      modified: 1758291534520
+      sortKey: -1758289147364
+      description: ""
+    children:
+      - url: http://localhost:3004/json
+        name: Json
+        meta:
+          id: req_ed78dc9886774f888debb14d8847cc6f
+          created: 1758291534522
+          modified: 1763668258160
+          isPrivate: false
+          description: ""
+          sortKey: -1758289160048
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_947cc4cb7b3c441eb7b7241212686294
+          - id: pair_078afe42296d4411a0bbb357344f1f14
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/
+        name: Home
+        meta:
+          id: req_b7a11d23992e446abc8bcdb75835cb00
+          created: 1758291534524
+          modified: 1763575230360
+          isPrivate: false
+          description: ""
+          sortKey: -1758289160148
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_d7136d729b5e4c1e918b52721db3fe9b
+          - id: pair_0e1e6f5b53f64a6db5ac893dcc484bc6
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+          - id: pair_e379adacac4844e489b50eab52316877
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/users/:id
+        name: Users
+        meta:
+          id: req_25a3cfa8d5764bab9f54ab87a4e85e9b
+          created: 1758291534525
+          modified: 1763573920687
+          isPrivate: false
+          description: ""
+          sortKey: -1758289159948
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_5314b4c897504db0a50c3184874a7983
+          - id: pair_1fb8c3f033b44daba7929a668f5f9275
+            name: X-Token
+            value: aaabbbccc
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: peter_curley
+      - url: http://localhost:3004/users/byname
+        name: UsersByName
+        meta:
+          id: req_25f1e52c6e114b309d6bdd4a83fee377
+          created: 1758291534527
+          modified: 1763653824577
+          isPrivate: false
+          description: ""
+          sortKey: -1758289159848
+        method: GET
+        parameters:
+          - name: name
+            value: Garret Heaton
+            disabled: false
+            id: pair_8fda35f7d43b4ea5a83c0b42a760255d
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_b956416c302c4e73bdc12f7f1be1c081
+          - id: pair_5b7d903884204ffdbe4006dd457e76b6
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/users/julien_simon
+        name: Add
+        meta:
+          id: req_3a2dc831d6944f5ea147e1e74b2529fb
+          created: 1758291534529
+          modified: 1763576351262
+          isPrivate: false
+          description: ""
+          sortKey: -1758289159748
+        method: POST
+        body:
+          mimeType: application/json
+          text: |2-
+              {
+                  "id": "julien_simon",
+                  "name": "Julien Simon",
+                  "last_active": 12345,
+            			"role": "user",
+            			"access_token": "xxxyyyzzz"
+                }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_5077c218ed9d4b0eb93db4e9659d9a38
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_96d2126f9c3c497ca2ae56818d276721
+          - id: pair_2054b054eb814383821efe2d5cfb904c
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/users/julien_simon
+        name: Update
+        meta:
+          id: req_4caf355a3582433c91f1fdd88ed8e459
+          created: 1758291534531
+          modified: 1763576393801
+          isPrivate: false
+          description: ""
+          sortKey: -1758289159698
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |2-
+             {
+                  "id": "julien_simon",
+                  "name": "Julien SIMON",
+                  "last_active": 12345,
+            	 		"role" : "admin"
+                }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_345d9cf80b7a4e02907e12fd240168af
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_bae65706a3394a97904f4803db2dabf0
+          - id: pair_ae0f4b3f7c6742c193f1322cdb49c552
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/users/julien_simon
+        name: Delete
+        meta:
+          id: req_de60482864894bf2b91e2a8ad4b52f89
+          created: 1758291534532
+          modified: 1763576513854
+          isPrivate: false
+          description: ""
+          sortKey: -1758289159648
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_66a64c0800cb44548b306b0f55d8b2a3
+          - id: pair_23120c2253fb4139a66612ba09e18990
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/users/auth
+        name: Check user
+        meta:
+          id: req_9c892fc49db64553be01c765127162db
+          created: 1763632407976
+          modified: 1763654538018
+          isPrivate: false
+          description: ""
+          sortKey: -1758289160098
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_947cc4cb7b3c441eb7b7241212686294
+          - id: pair_078afe42296d4411a0bbb357344f1f14
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3004/check/admin
+        name: Check permission
+        meta:
+          id: req_e0b2297faa604282834c137921325b48
+          created: 1763632435745
+          modified: 1763632586149
+          isPrivate: false
+          description: ""
+          sortKey: -1758289160073
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_947cc4cb7b3c441eb7b7241212686294
+          - id: pair_078afe42296d4411a0bbb357344f1f14
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Schedule
+    meta:
+      id: fld_9dd4cf77f8934954821f25f7555218f4
+      created: 1758292972731
+      modified: 1758292972731
+      sortKey: -1758292972731
+      description: ""
+  - name: Booking
+    meta:
+      id: fld_d4805df0788742a380e0d6e3506df6b7
+      created: 1758293097004
+      modified: 1758293143936
+      sortKey: -1758289147514
+      description: ""
+  - name: GraphQL Movie
+    meta:
+      id: fld_bad53d24b965493297f8883758ce10d3
+      created: 1758889712550
+      modified: 1759499894749
+      sortKey: -1758889712550
+      description: ""
+    children:
+      - url: http://localhost:3001/graphql
+        name: GET Movie
+        meta:
+          id: req_acefbdd865ee4a398398fa75734d7794
+          created: 1758889716914
+          modified: 1763728876807
+          isPrivate: false
+          description: ""
+          sortKey: -1758889718954
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"query{\n  movie_with_id(_id:\"96798c08-d19b-4986-a05d-7da856efb697\")
+            {\n\t\tid\n    title\n    rating\n    actors{\n      firstname\n      lastname\n      birthyear\n    }\n  }\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_d6535f98e0064bbf9ceefce78d05ca55
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_4ff0b065ae0841f5a7fb2ef9e7391fd9
+          - id: pair_557f55980d3140b99006235748432329
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3001/graphql
+        name: UPDATE Movie
+        meta:
+          id: req_935d6589dd4b4145b73cc2cc2da0f064
+          created: 1758892296331
+          modified: 1763728893220
+          isPrivate: false
+          description: ""
+          sortKey: -1758731753981
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation{\n    update_movie_rate(_id:\"a8034f44-aee4-44cf-b32c-74cf452aaaae\",_rate:8.4)
+            {\n        title\n        rating\n    }\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_9df4b941a316411b864838de4fd7b5ec
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_180c7d05be6647a292df3551071399d4
+          - id: pair_8cc4364900bf401895227632f1a6e180
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3001/graphql
+        name: ALL Movies
+        meta:
+          id: req_9586546badb049ae892a44e5a8213eec
+          created: 1758894028657
+          modified: 1763728880838
+          isPrivate: false
+          description: ""
+          sortKey: -1758810736467.5
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"query{\n  all_movies{\n\t\tid\n\t\ttitle\n    rating\n    actors{\n      firstname\n      lastname\n      birthyear\n    }\n\t}\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_2a55add6b3864750b5d06ab5f5e01fb4
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_bfb6aca424bc4e718fd0e9b7d3254b9a
+          - id: pair_64473570643148678e467fdfb6c05e55
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: GraphQL Booking
+    meta:
+      id: fld_8c061b9efac440d7abf50cf8baca3e67
+      created: 1758895533641
+      modified: 1758895533641
+      sortKey: -1758591342640.5
+      description: ""
+    children:
+      - url: http://localhost:3002/graphql
+        name: GET Booking
+        meta:
+          id: req_57c4bb1a37b747aca4c8417ba364c946
+          created: 1758895533642
+          modified: 1763728897425
+          isPrivate: false
+          description: ""
+          sortKey: -1758889718954
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"query{\n  booking_by_userid(_userid:\"garret_heaton\")
+            {\n    dates{\n\t\t\tdate\n\t\t\tmovies\n\t\t}\n  }\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_0aa4696845054c239e261c3f6acb8d95
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_79caf9e0b3334151953acc537b0fc829
+          - id: pair_b1030d686a6444bb8e61d2451666841a
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3002/graphql
+        name: ADD Booking
+        meta:
+          id: req_c336b2915da14f6d9594214bd052a5f3
+          created: 1758895533646
+          modified: 1763729329136
+          isPrivate: false
+          description: ""
+          sortKey: -1758731753981
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation{\n    add_booking(\n\t\t\t_userid:\"garret_heaton\",\n\t\t\t_new_booking:{\n\t\t\t\tnew_userid:\"garret_heaton\",\n\t\t\t\tnew_dates:{\n\t\t\t\t\tnew_date:
+            \"20151204\",\n\t\t\t\t\tnew_movies:[\"39ab85e5-5e8e-4dc5-afea-65dc368bd7ab\"]\n\t\t\t\t}\n\t\t\t})
+            {\n        userid\n    }\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_8ad571886d7a41f79c3b074d910a1076
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_a352fcac128c4798a9d0dfa88e636fbc
+          - id: pair_87757eaac5a242629d533d5f3b7ca613
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3002/graphql
+        name: ALL Bookings
+        meta:
+          id: req_59d9444c42844d2790b9656054e776de
+          created: 1758895533652
+          modified: 1763671430521
+          isPrivate: false
+          description: ""
+          sortKey: -1758810736467.5
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"query{\n  all_bookings{\n\t\tuserid\n    dates{\n      date\n      movies\n    }\n\t}\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_f025ef9067574b0d89b524daef2a3dd1
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_abc289e5c5794140b63d67eae4b81618
+          - id: pair_2fde117f17824a30bfba221e4b986d79
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3002/graphql
+        name: DEL Booking
+        meta:
+          id: req_1bd702f879c842058ca1dda02dc9b58e
+          created: 1758897752000
+          modified: 1763725675389
+          isPrivate: false
+          description: ""
+          sortKey: -1758652771494.5
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation{\n    delete_booking(\n\t\t\t_userid:\"garret_heaton\")\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_cd25832870134fa3942555193051ef0e
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_8133466180d84b549957ad70362dd933
+          - id: pair_d1ae9eb1a60144f3bc9838de1854709c
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3002/graphql
+        name: GET BookingDetails
+        meta:
+          id: req_d5e2afcc16b249a289cec869b1999aaa
+          created: 1758898284966
+          modified: 1763726143035
+          isPrivate: false
+          description: ""
+          sortKey: -1758850227710.75
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"query{\n  booking_details(_userid:\"garret_heaton\")
+            {\n    userid\n\t\tmovies{\n\t\t\ttitle\n\t\t\tdirector\n\t\t\trating\n\t\t\tactors{\n\t\t\t\tfirstname\n\t\t\t\tlastname\n\t\t\t\tbirthyear\n\t\t\t\tfilms\n\t\t\t}\n\t\t}\n  }\n}"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_ae3ccaf67f334652b8313ee7ea50293e
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_b62157d0a89d42a5bdcadfe9eeedd0f8
+          - id: pair_448c3b8c510340c791143420cb4b6840
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Tuto gRPC
+    meta:
+      id: fld_213a40cb6bf54ffc82e9460d79d472dc
+      created: 1759493548441
+      modified: 1759493548441
+      sortKey: -1759493548441
+      description: ""
+  - name: gRPC Schedule
+    meta:
+      id: fld_8638620c516543c6a8a9a449ddfc2b37
+      created: 1759499882219
+      modified: 1759499895490
+      sortKey: -1759191630495.5
+      description: ""
+    children:
+      - url: localhost:3003
+        name: Movies by date
+        meta:
+          id: greq_d204b33ae7184f2ab1cd36ded4faad76
+          created: 1759499903453
+          modified: 1763671206587
+          isPrivate: false
+          sortKey: -1759499906605
+          description: ""
+        body:
+          text: |-
+            {
+            	"date":"20251117"
+            }
+        metadata:
+          - id: pair_13b1e967c363420ab16e15e236dfa49a
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        protoFileId: pf_6f62018c756c4208978b2384c19f1523
+        protoMethodName: /Schedule/GetMoviesByDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3003
+        name: Dates for movie
+        meta:
+          id: greq_074f2e2d3846471984fe5ecd2a1eb9aa
+          created: 1759500775352
+          modified: 1763671384237
+          isPrivate: false
+          sortKey: -1759499906505
+          description: ""
+        body:
+          text: |-
+            {
+            	"id": "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            }
+        metadata:
+          - id: pair_d54aec3890e74f6e8d214efe372423de
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+          - id: pair_2f29a905cd914c4c988c1ee711de86e2
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        protoFileId: pf_6f62018c756c4208978b2384c19f1523
+        protoMethodName: /Schedule/GetDatesForMovie
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3003
+        name: Add schedule
+        meta:
+          id: greq_2947765024444b3792579d2ef676a555
+          created: 1763394777687
+          modified: 1763669057338
+          isPrivate: false
+          sortKey: -1763394777687
+          description: ""
+        body:
+          text: >-
+            {
+            	"date":"20251117",
+            	"movies":["7daf7208-be4d-4944-a3ae-c1c2f516f3e6","a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+            }
+        metadata:
+          - id: pair_22cfcb2ac1d244be9435b5957404fa6d
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        protoFileId: pf_6f62018c756c4208978b2384c19f1523
+        protoMethodName: /Schedule/AddSchedule
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3003
+        name: Del schedule
+        meta:
+          id: greq_24ca6a32ae1946e899f647b515a4db63
+          created: 1763394855974
+          modified: 1763669065479
+          isPrivate: false
+          sortKey: -1763394855974
+          description: ""
+        body:
+          text: |-
+            {
+            	"date":"20251117",
+            	"movies":["a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+            }
+        metadata:
+          - id: pair_e3de7dda96774d6191739e0cc9a6880e
+            name: X-Token
+            value: bbbcccddd
+            description: ""
+            disabled: false
+        protoFileId: pf_6f62018c756c4208978b2384c19f1523
+        protoMethodName: /Schedule/DeleteSchedule
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+  - name: Tuto mongo
+    meta:
+      id: fld_62f6e0f7da3144a09c39135688524fdd
+      created: 1760105173747
+      modified: 1760105183004
+      sortKey: -1760105107394
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_ec934d2e97414de3bd1670168f5307b5
+    created: 1758287876977
+    modified: 1758287876977
+environments:
+  name: Base Environment
+  meta:
+    id: env_1529ba79c1914261803e1de0dc4ca2df
+    created: 1758287876974
+    modified: 1758287876974
+    isPrivate: false
