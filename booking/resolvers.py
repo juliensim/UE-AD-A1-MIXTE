@@ -3,15 +3,14 @@ import os
 from dotenv import load_dotenv
 from graphql import GraphQLError
 from pymongo import MongoClient
+from flask import Flask, request
 
 load_dotenv()
 
-movies = None
-actors = None
 bookings = None
 
 def Initialisation():
-    global movies, actors, bookings
+    global bookings
 
     client = MongoClient(os.getenv("MONGO_" + os.getenv("MODE")))
     
@@ -25,25 +24,6 @@ def Initialisation():
     if list(collection_bookings.find()) == [] :
         collection_bookings.insert_many(movies_json)
     bookings = collection_bookings
-
-    # Init movies
-    with open('{}/../movie/data/movies.json'.format("."), "r") as jsf:
-        movies_json = json.load(jsf).get("movies", [])
-
-    db_movie = client["movies"]
-    collection_movie = db_movie["movies"]
-    if list(collection_movie.find()) == [] :
-        collection_movie.insert_many(movies_json)
-    movies = collection_movie
-    
-    # Init actors
-    with open('{}/../movie/data/actors.json'.format("."), "r") as jsf:
-        actors_json = json.load(jsf).get("actors", [])
-    db_movie = client["actors"]
-    collection_movie = db_movie["actors"]
-    if list(collection_movie.find()) == [] :
-        collection_movie.insert_many(actors_json)
-    actors = collection_movie
 
 Initialisation()
 
@@ -61,7 +41,7 @@ def booking_by_userid(_,info,_userid):
 
 
 def add_booking(_,info,_userid,_new_booking):
-    if not(check_permission("admin",info)):
+    if not(check_permission("user",info)):
         raise GraphQLError(
             "Insufficient permissions",
             extensions={"code": "UNAUTHORIZED"}
@@ -81,7 +61,7 @@ def add_booking(_,info,_userid,_new_booking):
     return inserted_booking
 
 def delete_booking(_,info,_userid):
-    if not(check_permission("admin",info)):
+    if not(check_permission("user",info)):
         raise GraphQLError(
             "Insufficient permissions",
             extensions={"code": "UNAUTHORIZED"}
@@ -98,12 +78,52 @@ def all_bookings(_,info):
     res = bookings.find({}, {"_id": 0})
     return res
     
+def call_movie_service(movie_id, token):
+    query = """
+    query MovieQuery($id: String!) {
+        movie_with_id(_id: $id) {
+            title
+            rating
+            director
+        }
+    }
+    """
+    payload = {
+        "query": query,
+        "variables": {"id": movie_id},
+        "operationName": "MovieQuery"
+    }
+    resp = requests.post(
+        "http://localhost:3001/graphql",
+        json=payload,
+        headers={
+            "Content-Type": "application/json",
+            "X-Token": token
+        }
+    )
+    
+    # Si erreur réseau ou réponse vide :
+    if resp.status_code != 200:
+        print("ERROR calling MOVIE service:", resp.status_code, resp.text)
+        return None
+
+    data = resp.json()
+
+    if "data" not in data or data["data"]["movie_with_id"] is None:
+        print("Movie not found:", movie_id)
+        return None
+    
+    return data["data"]["movie_with_id"]
+
 def booking_details(_,info,_userid):
     if not(check_permission("user",info)):
         raise GraphQLError(
             "Insufficient permissions",
             extensions={"code": "UNAUTHORIZED"}
         )
+    token = info.context.headers.get("X-Token")
+
+    # tous les bookings de l'utilisateur
     user_bookings = list(bookings.find({"userid": _userid}, {"_id": 0}))
 
     if not user_bookings:
@@ -121,17 +141,9 @@ def booking_details(_,info,_userid):
                     continue
                 movie_ids.add(movieid)
 
-                movie = movies.find_one({"id": movieid}, {"_id": 0})
+                movie = call_movie_service(movieid, token)
                 if not movie:
                     continue
-
-                enriched_actors = list(actors.find({"films": movie.get("id")}, {"_id": 0}))
-                if not enriched_actors:
-                    actor_ids = movie.get("actors") or []
-                    if actor_ids:
-                        enriched_actors = list(actors.find({"id": {"$in": actor_ids}}, {"_id": 0}))
-
-                movie["actors"] = enriched_actors
                 movies_list.append(movie)
     booking_details_res = {"userid": _userid, "movies": movies_list}
     return booking_details_res
